@@ -8,7 +8,7 @@ int main (int argc, char **argv) {
 
     int result = 0;
 
-    if (render_init(800, 600) == 0) {
+    if (render_init(INIT_WIDTH, INIT_HEIGHT) == 0) {
         render_run();
     } else {
         result = 1;

@@ -219,6 +219,7 @@ static void render_end_frame() {
 }
 
 void render_run() {
+    // TODO(sean) Error handling
     render_init_draw();
 
     while (!glfwWindowShouldClose(ctx.window)) {
@@ -232,7 +233,7 @@ void render_run() {
         render_end_frame();
     }
 
-    // TODO glDeleteVertexArrays, glDeleteBuffers, glDeleteShader, glDeleteProgram
+    // TODO(sean) glDeleteVertexArrays, glDeleteBuffers, glDeleteShader, glDeleteProgram
 }
 
 void render_end() {
