@@ -236,6 +236,6 @@ void render_run() {
     // TODO(sean) glDeleteVertexArrays, glDeleteBuffers, glDeleteShader, glDeleteProgram
 }
 
-void render_end() {
+void render_shutdown() {
     glfwTerminate();
 }

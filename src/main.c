@@ -1,24 +1,30 @@
-#include "platform/platform.h"
+#include "log/log.h"
 #include "render/render.h"
 #include <stdio.h>
 
 #define INIT_WIDTH   800
 #define INIT_HEIGHT  600
 
+#define LOG_FILE_PATH "log.txt"
+
 int main (int argc, char **argv) {
-    printf("Executable location: %s\n", platform_get_exe_location());
-
-    // TODO(sean) Parse application directory from argv[0] (for shader search)
-
-    int result = 0;
-
-    if (render_init(INIT_WIDTH, INIT_HEIGHT) == 0) {
-        render_run();
-    } else {
-        result = 1;
+    if (log_init("log.txt") != 0) {
+        printf("ERROR: Failed to initialize logging; aborting\n");
+        return 1;
     }
 
-    render_end();
+    if (render_init(INIT_WIDTH, INIT_HEIGHT) != 0) {
+        log_error("Failed to initialize rendering");
+        log_shutdown();
+        return 1;
+    }
 
-    return result;
+    log_info("Initialization successful");
+
+    render_run();
+
+    render_shutdown();
+    log_shutdown();
+
+    return 0;
 }

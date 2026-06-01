@@ -57,6 +57,24 @@ target_sources(platformlib
 target_compile_options(platformlib PRIVATE -D_CRT_SECURE_NO_WARNINGS)
 
 # ---------------------------------------------------------
+# log.lib
+# ---------------------------------------------------------
+
+add_library(loglib)
+target_sources(loglib
+    PRIVATE
+        src/log/log.c
+    PUBLIC
+        FILE_SET HEADERS
+        BASE_DIRS
+            inc/
+        FILES
+            inc/log/log.h
+)
+
+target_compile_options(loglib PRIVATE -D_CRT_SECURE_NO_WARNINGS)
+
+# ---------------------------------------------------------
 # render.lib
 # ---------------------------------------------------------
 
@@ -72,7 +90,7 @@ target_sources(renderlib
             inc/render/render.h
 )
 
-target_link_libraries(renderlib PRIVATE glad glfw platformlib)
+target_link_libraries(renderlib PRIVATE glad glfw loglib platformlib)
 
 # ---------------------------------------------------------
 # main.exe
@@ -86,4 +104,4 @@ target_sources(main
 
 target_compile_options(main PRIVATE -D_CRT_SECURE_NO_WARNINGS)
 
-target_link_libraries(main PRIVATE renderlib)
+target_link_libraries(main PRIVATE loglib renderlib)
