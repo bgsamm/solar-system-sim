@@ -82,12 +82,14 @@ add_library(renderlib)
 target_sources(renderlib
     PRIVATE
         src/render/render.c
+        src/render/shader.c
     PUBLIC
         FILE_SET HEADERS
         BASE_DIRS
             inc/
         FILES
             inc/render/render.h
+            inc/render/shader.h
 )
 
 target_link_libraries(renderlib PRIVATE glad glfw loglib platformlib)
