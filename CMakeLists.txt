@@ -39,15 +39,51 @@ target_sources(glad
 )
 
 # ---------------------------------------------------------
+# file.lib
+# ---------------------------------------------------------
+
+add_library(filelib)
+target_sources(filelib
+    PRIVATE
+        src/file/file.c
+    PUBLIC
+        FILE_SET HEADERS
+        BASE_DIRS
+            inc/
+        FILES
+            inc/file/file.h
+)
+
+target_compile_options(filelib PRIVATE -D_CRT_SECURE_NO_WARNINGS)
+
+# ---------------------------------------------------------
+# render.lib
+# ---------------------------------------------------------
+
+add_library(renderlib)
+target_sources(renderlib
+    PRIVATE
+        src/render/render.c
+    PUBLIC
+        FILE_SET HEADERS
+        BASE_DIRS
+            inc/
+        FILES
+            inc/render/render.h
+)
+
+target_link_libraries(renderlib PRIVATE glad glfw filelib)
+
+# ---------------------------------------------------------
 # main.exe
 # ---------------------------------------------------------
 
 add_executable(main)
 target_sources(main
     PRIVATE
-        src/main.cpp
+        src/main.c
 )
 
 target_compile_options(main PRIVATE -D_CRT_SECURE_NO_WARNINGS)
 
-target_link_libraries(main PRIVATE glad glfw)
+target_link_libraries(main PRIVATE renderlib)
