@@ -39,22 +39,22 @@ target_sources(glad
 )
 
 # ---------------------------------------------------------
-# file.lib
+# platform.lib
 # ---------------------------------------------------------
 
-add_library(filelib)
-target_sources(filelib
+add_library(platformlib)
+target_sources(platformlib
     PRIVATE
-        src/file/file.c
+        "src/platform/platform_${CMAKE_SYSTEM_NAME}.c"
     PUBLIC
         FILE_SET HEADERS
         BASE_DIRS
             inc/
         FILES
-            inc/file/file.h
+            inc/platform/platform.h
 )
 
-target_compile_options(filelib PRIVATE -D_CRT_SECURE_NO_WARNINGS)
+target_compile_options(platformlib PRIVATE -D_CRT_SECURE_NO_WARNINGS)
 
 # ---------------------------------------------------------
 # render.lib
@@ -72,7 +72,7 @@ target_sources(renderlib
             inc/render/render.h
 )
 
-target_link_libraries(renderlib PRIVATE glad glfw filelib)
+target_link_libraries(renderlib PRIVATE glad glfw platformlib)
 
 # ---------------------------------------------------------
 # main.exe

@@ -1,5 +1,5 @@
 #include "render/render.h"
-#include "file/file.h"
+#include "platform/platform.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <stdbool.h>
@@ -99,7 +99,7 @@ static void render_create_shaders() {
 }
 
 static int render_reload_shader(GLuint shader, const char *path) {
-    char *shader_src = file_read_all(path);
+    char *shader_src = platform_read_entire_file(path);
 
     if (!shader_src) {
         return 1;
