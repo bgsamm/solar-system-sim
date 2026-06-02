@@ -45,7 +45,7 @@ target_sources(glad
 add_library(platformlib)
 target_sources(platformlib
     PRIVATE
-        "src/platform/platform_${CMAKE_SYSTEM_NAME}.c"
+        "src/platform/${CMAKE_SYSTEM_NAME}/platform.c"
     PUBLIC
         FILE_SET HEADERS
         BASE_DIRS
