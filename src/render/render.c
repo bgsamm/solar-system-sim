@@ -3,6 +3,7 @@
 #include "platform/platform.h"
 #include "render/shader.h"
 #include <stdbool.h>
+#include <stddef.h>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -12,20 +13,21 @@ typedef struct {
     ShaderProgram shader_prog;
 } RenderContext;
 
-// clang-format off
-const float tri1_verts[] = {
-    // Positions            // Colors
-    -0.80f, -0.50f, 0.00f,  1.0f, 0.0f, 0.0f,
-    -0.40f,  0.50f, 0.00f,  0.0f, 1.0f, 0.0f,
-     0.00f, -0.50f, 0.00f,  0.0f, 0.0f, 1.0f,
+typedef struct {
+    float position[3];
+    float color[3];
+} Vertex;
+
+const Vertex tri1_verts[] = {
+    {{-0.80f, -0.50f, 0.00f}, {1.0f, 0.0f, 0.0f}},
+    {{-0.40f, 0.50f, 0.00f}, {0.0f, 1.0f, 0.0f}},
+    {{0.00f, -0.50f, 0.00f}, {0.0f, 0.0f, 1.0f}},
 };
-const float tri2_verts[] = {
-    // Positions           // Colors
-    0.00f,  0.50f, 0.00f,  1.0f, 0.0f, 0.0f,
-    0.40f, -0.50f, 0.00f,  0.0f, 1.0f, 0.0f,
-    0.80f,  0.50f, 0.00f,  0.0f, 0.0f, 1.0f,
+const Vertex tri2_verts[] = {
+    {{0.00f, 0.50f, 0.00f}, {1.0f, 0.0f, 0.0f}},
+    {{0.40f, -0.50f, 0.00f}, {0.0f, 1.0f, 0.0f}},
+    {{0.80f, 0.50f, 0.00f}, {0.0f, 0.0f, 1.0f}},
 };
-// clang-format on
 
 GLuint tri1, tri2;
 
@@ -70,7 +72,7 @@ static void keyCallback(GLFWwindow *window, int key, int scancode, int action, i
     }
 }
 
-static GLuint render_create_vertex_array(const float *vertices, GLsizeiptr size) {
+static GLuint render_create_vertex_array(const Vertex *vertices, GLsizeiptr size) {
     GLuint vertex_array_id;
     glGenVertexArrays(1, &vertex_array_id);
     glBindVertexArray(vertex_array_id);
@@ -80,9 +82,11 @@ static GLuint render_create_vertex_array(const float *vertices, GLsizeiptr size)
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_id);
     glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)(0));
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                          (void *)offsetof(Vertex, position));
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                          (void *)offsetof(Vertex, color));
     glEnableVertexAttribArray(1);
 
     // TODO(sean) Reintroduce element array buffer?
