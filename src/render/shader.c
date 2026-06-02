@@ -38,9 +38,10 @@ static int render_reload_shader(unsigned int shader, const char *path) {
     glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
 
     if (!success) {
+        // TODO(sean) Better formatting of info log
         char buf[512];
         glGetShaderInfoLog(shader, 512, NULL, buf);
-        log_error("Compilation failed: %s", buf);
+        log_error("Shader compilation failed:\n%s", buf);
         return 1;
     }
 
@@ -48,9 +49,14 @@ static int render_reload_shader(unsigned int shader, const char *path) {
 }
 
 int render_reload_shaders(ShaderProgram *shader_prog) {
-    // TODO(sean) Error handling
-    render_reload_shader(shader_prog->vert_shader, VERT_SHADER_PATH);
-    render_reload_shader(shader_prog->frag_shader, FRAG_SHADER_PATH);
+    if (render_reload_shader(shader_prog->vert_shader, VERT_SHADER_PATH) != 0) {
+        log_warn("Failed to reload vertex shader");
+        return 1;
+    }
+    if (render_reload_shader(shader_prog->frag_shader, FRAG_SHADER_PATH) != 0) {
+        log_warn("Failed to reload fragment shader");
+        return 1;
+    }
 
     glLinkProgram(shader_prog->id);
 
@@ -58,9 +64,10 @@ int render_reload_shaders(ShaderProgram *shader_prog) {
     glGetProgramiv(shader_prog->id, GL_LINK_STATUS, &success);
 
     if (!success) {
+        // TODO(sean) Better formatting of info log
         char buf[512];
         glGetProgramInfoLog(shader_prog->id, 512, NULL, buf);
-        log_error("Linking failed: %s", buf);
+        log_error("Shader linking failed: %s", buf);
         return 1;
     }
 
