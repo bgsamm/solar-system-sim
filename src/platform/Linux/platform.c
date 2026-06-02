@@ -1,25 +1,30 @@
 #include "platform/platform.h"
 #include "log/log.h"
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
-#include <windows.h>
+#include <sys/types.h>
+#include <unistd.h>
 
-#define DIR_SEP '\\'
+#define DIR_SEP '/'
 
-// Ref.: https://linuxvox.com/blog/how-do-i-find-the-location-of-the-executable-in-c/
-const char *platform_get_exe_location() {
-    static char path_buf[MAX_PATH];
+// Ref.:
+// https://linuxvox.com/blog/how-do-i-find-the-location-of-the-executable-in-c/
+const char *platform_get_exe_dir() {
+    static char path_buf[PATH_MAX];
 
-    DWORD len = GetModuleFileNameA(NULL, path_buf, MAX_PATH);
-    if (len == 0) {
+    ssize_t len = readlink("/proc/self/exe", path_buf, sizeof(path_buf) - 1);
+    if (len == -1) {
         log_error("Unable to determine executable location");
         return NULL;
-    } else if (len == MAX_PATH) {
+    } else if (len == PATH_MAX) {
         log_error("Executable location exceeded max path length");
         return NULL;
     }
+
+    path_buf[len] = '\0';
 
     char *dir_sep = strrchr(path_buf, DIR_SEP);
     if (!dir_sep) {
@@ -37,9 +42,9 @@ size_t platform_get_file_size(const char *path) {
         return -1;
     }
 
-    struct _stati64 st;
+    struct stat st;
 
-    if (_stati64(path, &st) != 0) {
+    if (stat(path, &st) != 0) {
         log_error("Unable to determine file size");
         return -1;
     }

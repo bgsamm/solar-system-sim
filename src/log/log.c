@@ -24,7 +24,7 @@ void log_shutdown() {
     }
 }
 
-void log_write_message(LogLevel level, const char *msg, ...) {
+void log_write_message(LogLevel level, const char* msg, ...) {
     if (!msg) {
         return;
     }
@@ -35,18 +35,18 @@ void log_write_message(LogLevel level, const char *msg, ...) {
 
     const char *tag;
     switch (level) {
-        case LOG_DEBUG:
-            tag = "DEBUG";
-            break;
-        case LOG_INFO:
-            tag = "INFO";
-            break;
-        case LOG_WARN:
-            tag = "WARN";
-            break;
-        case LOG_ERROR:
-            tag = "ERROR";
-            break;
+    case LOG_DEBUG:
+        tag = "DEBUG";
+        break;
+    case LOG_INFO:
+        tag = "INFO";
+        break;
+    case LOG_WARN:
+        tag = "WARN";
+        break;
+    case LOG_ERROR:
+        tag = "ERROR";
+        break;
     }
 
     printf("[%s] ", tag);

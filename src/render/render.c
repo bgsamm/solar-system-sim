@@ -1,10 +1,10 @@
 #include "render/render.h"
 #include "log/log.h"
-#include "render/shader.h"
 #include "platform/platform.h"
+#include "render/shader.h"
+#include <stdbool.h>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <stdbool.h>
 
 typedef struct {
     GLFWwindow *window;
@@ -12,17 +12,8 @@ typedef struct {
     ShaderProgram shader_prog;
 } RenderContext;
 
-const float tri1_verts[] = {
-    -0.80f, -0.50f, 0.00f,
-    -0.40f,  0.50f, 0.00f,
-     0.00f, -0.50f, 0.00f
-};
-
-const float tri2_verts[] = {
-     0.00f,  0.50f, 0.00f,
-     0.40f, -0.50f, 0.00f,
-     0.80f,  0.50f, 0.00f
-};
+const float tri1_verts[] = {-0.80f, -0.50f, 0.00f, -0.40f, 0.50f, 0.00f, 0.00f, -0.50f, 0.00f};
+const float tri2_verts[] = {0.00f, 0.50f, 0.00f, 0.40f, -0.50f, 0.00f, 0.80f, 0.50f, 0.00f};
 
 GLuint tri1, tri2;
 
@@ -43,7 +34,7 @@ static void framebufferSizeCallback(GLFWwindow *window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
-static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+static void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods) {
     if (action == GLFW_PRESS) {
         switch (key) {
         case GLFW_KEY_W:
@@ -53,7 +44,7 @@ static void keyCallback(GLFWwindow* window, int key, int scancode, int action, i
                 glfwSetWindowShouldClose(window, GLFW_TRUE);
             }
             break;
-        
+
         case GLFW_KEY_R:
             if ((mods & GLFW_MOD_ALT)) {
                 if (render_reload_shaders(&ctx.shader_prog) != 0) {

@@ -1,8 +1,8 @@
 #include "render/shader.h"
 #include "log/log.h"
 #include "platform/platform.h"
-#include <glad/glad.h>
 #include <stdlib.h>
+#include <glad/glad.h>
 
 // TODO(sean) Avoid hard-coding these?
 #define VERT_SHADER_PATH "shaders/vertex.glsl"
