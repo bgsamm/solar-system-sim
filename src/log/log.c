@@ -42,7 +42,7 @@ void log_write_message(LogLevel level, const char* msg, ...) {
         tag = "INFO";
         break;
     case LOG_WARN:
-        tag = "WARN";
+        tag = "WARNING";
         break;
     case LOG_ERROR:
         tag = "ERROR";
