@@ -93,23 +93,23 @@ void input_update(float dt) {
     Camera *camera = &g_ctx.camera;
 
     if (glfwGetKey(g_ctx.window, GLFW_KEY_W) == GLFW_PRESS) {
-        camera_translate(camera, HMM_MulV3F(camera->forward, dx));
+        camera_translate(camera, HMM_MulV3F(camera->up, dx));
     }
     if (glfwGetKey(g_ctx.window, GLFW_KEY_A) == GLFW_PRESS) {
         camera_translate(camera,
                          HMM_MulV3F(HMM_NormV3(HMM_Cross(camera->forward, camera->up)), -dx));
     }
     if (glfwGetKey(g_ctx.window, GLFW_KEY_S) == GLFW_PRESS) {
-        camera_translate(camera, HMM_MulV3F(camera->forward, -dx));
+        camera_translate(camera, HMM_MulV3F(camera->up, -dx));
     }
     if (glfwGetKey(g_ctx.window, GLFW_KEY_D) == GLFW_PRESS) {
         camera_translate(camera,
                          HMM_MulV3F(HMM_NormV3(HMM_Cross(camera->forward, camera->up)), dx));
     }
-    if (glfwGetKey(g_ctx.window, GLFW_KEY_Q) == GLFW_PRESS) {
-        camera_translate(camera, HMM_MulV3F(camera->up, -dx));
-    }
     if (glfwGetKey(g_ctx.window, GLFW_KEY_E) == GLFW_PRESS) {
-        camera_translate(camera, HMM_MulV3F(camera->up, dx));
+        camera_translate(camera, HMM_MulV3F(camera->forward, dx));
+    }
+    if (glfwGetKey(g_ctx.window, GLFW_KEY_C) == GLFW_PRESS) {
+        camera_translate(camera, HMM_MulV3F(camera->forward, -dx));
     }
 }
