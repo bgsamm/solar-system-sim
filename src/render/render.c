@@ -1,3 +1,8 @@
+//scotts includes
+#include <stdio.h>
+#include <math.h>
+
+
 #include "render/render.h"
 #include "log/log.h"
 #include "platform/platform.h"
@@ -6,16 +11,76 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+
+
 typedef struct {
-    GLFWwindow *window;
-    bool use_wireframes;
-    ShaderProgram shader_prog;
+    GLFWwindow *window; //global window handler
+    bool use_wireframes; //wireframe toggle
+    ShaderProgram shader_prog; //active shader program
 } RenderContext;
 
-const float tri1_verts[] = {-0.80f, -0.50f, 0.00f, -0.40f, 0.50f, 0.00f, 0.00f, -0.50f, 0.00f};
-const float tri2_verts[] = {0.00f, 0.50f, 0.00f, 0.40f, -0.50f, 0.00f, 0.80f, 0.50f, 0.00f};
+//scott circle
+#define PI 3.14159265358979323846f
+#define circle_segments 64
+float circle_verts[(circle_segments + 2) * 3];
+int c_v_count;
 
-GLuint tri1, tri2;
+int circ_verts(float *c_verts, float cx, float cy, float cz, float radius){
+    // *c_verts pointer to first vertex in our cirlce
+    //c x,y,z = center vertex, radius is obious 
+    int i = 0;
+
+    //center vertex
+    c_verts[i++] = cx; 
+    c_verts[i++] = cy;
+    c_verts[i++] = cz;
+    //pointer -> 1,2,3
+
+    //edge vertices
+    float angle_step = 360.0f / circle_segments;
+    float angle_radians = angle_step * PI/180;
+    printf("Angle degrees : ");
+    printf("%.6f", angle_step);
+    printf("\nAngle radians : ");
+    printf("%.6f",  angle_radians);
+    printf("\n");
+    for (int j = 0; j <= circle_segments; j++){
+        //j determines the angle of the circle 
+        // angle_step = 360*//circle_seg
+        float current_angle = angle_radians * (j);
+        printf("Radian %d = ",j);
+        printf("%.6f \n",  current_angle);
+        //x
+        c_verts[i++] = cx + radius * cosf(current_angle) ;
+        //y
+        c_verts[i++] = cy + radius *sinf(current_angle) ;
+        //z
+        c_verts[i++] = 0.0f;
+    }
+    return i / 3;
+
+}
+// int main(){
+//     printf("test\n");
+//     float c_verts[(circle_segments + 2) * 3];
+//     int c_v_count = circ1_verts(c_verts, 0.0f, 0.0f, 0.0f, 10.0f);
+//     printf("\nGenerated %d vertices\n", c_v_count);
+//     for (int v = 0; v < circle_segments; v++) {
+//         printf("Vertex %d: x= %.6f y= %.6f z= %.6f\n", v, c_verts[v*3], c_verts[v*3+1], c_verts[v*3+2]);
+//     }
+//     return 0;
+// }
+
+//end scott circle
+// float circle_verts[(circle_segments + 2) * 3];
+// //circle_verts is the actual array holding vertices
+// int c_v_count = circ_verts(circle_verts, 0.0f, 0.0f, 0.0f, 10.0f);
+
+// const float tri1_verts[] = {-0.80f, -0.50f, 0.00f, -0.40f, 0.50f, 0.00f, 0.00f, -0.50f, 0.00f};
+// const float tri2_verts[] = {0.00f, 0.50f, 0.00f, 0.40f, -0.50f, 0.00f, 0.80f, 0.50f, 0.00f};
+
+
+GLuint c1; //tri1, tri2;
 
 RenderContext ctx;
 
@@ -35,6 +100,7 @@ static void framebufferSizeCallback(GLFWwindow *window, int width, int height) {
 }
 
 static void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods) {
+    // keyboard input proccessing
     if (action == GLFW_PRESS) {
         switch (key) {
         case GLFW_KEY_W:
@@ -101,9 +167,9 @@ int render_init(int width, int height) {
     }
 
     glViewport(0, 0, width, height);
-    glfwSetFramebufferSizeCallback(ctx.window, framebufferSizeCallback);
+    glfwSetFramebufferSizeCallback(ctx.window, framebufferSizeCallback); // keeps sync when window resizes
 
-    glfwSetKeyCallback(ctx.window, keyCallback);
+    glfwSetKeyCallback(ctx.window, keyCallback); // keyboard input
 
     return 0;
 }
@@ -112,8 +178,10 @@ static int render_init_draw() {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
     // TODO(sean) Remove this once we have actual stuff to render
-    tri1 = render_create_vertex_array(tri1_verts, sizeof(tri1_verts));
-    tri2 = render_create_vertex_array(tri2_verts, sizeof(tri2_verts));
+    // tri1 = render_create_vertex_array(tri1_verts, sizeof(tri1_verts));
+    // tri2 = render_create_vertex_array(tri2_verts, sizeof(tri2_verts));
+    c_v_count = circ_verts(circle_verts, 0.0f, 0.0f, 0.0f, 0.5f);
+    c1 = render_create_vertex_array(circle_verts, sizeof(circle_verts));
 
     render_create_shaders(&ctx.shader_prog);
     if (render_reload_shaders(&ctx.shader_prog) != 0) {
@@ -139,10 +207,12 @@ static void render_process_input() {
 }
 
 static void render_draw_frame() {
-    glBindVertexArray(tri1);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
-    glBindVertexArray(tri2);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    // glBindVertexArray(tri1);
+    // glDrawArrays(GL_TRIANGLES, 0, 3);
+    // glBindVertexArray(tri2);
+    // glDrawArrays(GL_TRIANGLES, 0, 3);
+    glBindVertexArray(c1);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, c_v_count);
 }
 
 static void render_end_frame() {
